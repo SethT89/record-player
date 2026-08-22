@@ -2,6 +2,7 @@
   position: relative;
   overflow: hidden;
   white-space: nowrap;
+  display: flex;
 }
 
 .marquee__measure {
@@ -23,6 +24,10 @@
 
 .marquee__track--scrolling {
   animation: marquee-scroll 10s linear infinite;
+}
+
+.marquee__track:not(.marquee__track--scrolling) {
+  margin: 0 auto;
 }
 
 @keyframes marquee-scroll {

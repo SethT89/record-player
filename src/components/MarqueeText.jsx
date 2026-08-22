@@ -42,7 +42,7 @@ export function MarqueeText({ text }) {
         {text}
       </span>
       {isOverflowing ? (
-        <div className="marquee__track marquee__track--scrolling">
+        <div key={text} className="marquee__track marquee__track--scrolling">
           <span className="marquee__copy">{text}</span>
           <span className="marquee__copy" aria-hidden="true">
             {text}

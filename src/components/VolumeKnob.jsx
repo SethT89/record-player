@@ -4,6 +4,7 @@ import "./VolumeKnob.css";
 const MIN_ANGLE = -135;
 const MAX_ANGLE = 135;
 const KEYBOARD_STEP = 5;
+const WHEEL_STEP = 5;
 
 const clampVolume = (value) => Math.min(100, Math.max(0, value));
 
@@ -29,6 +30,11 @@ export function VolumeKnob({ initialVolume = 70 }) {
   const handlePointerUp = useCallback((event) => {
     dragState.current = null;
     event.currentTarget.releasePointerCapture(event.pointerId);
+  }, []);
+
+  const handleWheel = useCallback((event) => {
+    event.preventDefault();
+    setVolume((current) => clampVolume(current - Math.sign(event.deltaY) * WHEEL_STEP));
   }, []);
 
   const handleKeyDown = useCallback((event) => {
@@ -72,6 +78,7 @@ export function VolumeKnob({ initialVolume = 70 }) {
       onPointerUp={handlePointerUp}
       onPointerCancel={handlePointerUp}
       onKeyDown={handleKeyDown}
+      onWheel={handleWheel}
     >
       <div
         className="volume-knob__indicator"
