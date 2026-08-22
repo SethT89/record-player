@@ -8,30 +8,21 @@ const WHEEL_STEP = 5;
 
 const clampVolume = (value) => Math.min(100, Math.max(0, value));
 
+/*
+  VolumeKnob
+  ----------
+  Dragging directly on a 44px dial is fiddly with a mouse (and not much
+  better with a finger), so the dial itself is just a display + toggle
+  button now. Clicking it opens a vertical slider popover, which is a
+  much easier target to actually adjust — the dial's rotation still
+  reflects whatever the slider (or keyboard, or the wheel) sets it to.
+*/
 export function VolumeKnob({ initialVolume = 70 }) {
   const [volume, setVolume] = useState(initialVolume);
-  const dragState = useRef(null);
+  const [isOpen, setIsOpen] = useState(false);
+  const containerRef = useRef(null);
   const knobRef = useRef(null);
-
-  const handlePointerDown = useCallback(
-    (event) => {
-      dragState.current = { startY: event.clientY, startVolume: volume };
-      event.currentTarget.setPointerCapture(event.pointerId);
-    },
-    [volume]
-  );
-
-  const handlePointerMove = useCallback((event) => {
-    if (!dragState.current) return;
-    const deltaY = dragState.current.startY - event.clientY;
-    const nextVolume = clampVolume(dragState.current.startVolume + deltaY);
-    setVolume(nextVolume);
-  }, []);
-
-  const handlePointerUp = useCallback((event) => {
-    dragState.current = null;
-    event.currentTarget.releasePointerCapture(event.pointerId);
-  }, []);
+  const sliderRef = useRef(null);
 
   const handleWheel = useCallback((event) => {
     event.preventDefault();
@@ -46,6 +37,27 @@ export function VolumeKnob({ initialVolume = 70 }) {
       element.removeEventListener("wheel", handleWheel);
     };
   }, [handleWheel]);
+
+  useEffect(() => {
+    if (!isOpen) return undefined;
+    sliderRef.current?.focus();
+
+    const handlePointerDownOutside = (event) => {
+      if (containerRef.current && !containerRef.current.contains(event.target)) {
+        setIsOpen(false);
+      }
+    };
+    const handleKeyDownGlobal = (event) => {
+      if (event.key === "Escape") setIsOpen(false);
+    };
+
+    document.addEventListener("pointerdown", handlePointerDownOutside);
+    document.addEventListener("keydown", handleKeyDownGlobal);
+    return () => {
+      document.removeEventListener("pointerdown", handlePointerDownOutside);
+      document.removeEventListener("keydown", handleKeyDownGlobal);
+    };
+  }, [isOpen]);
 
   const handleKeyDown = useCallback((event) => {
     switch (event.key) {
@@ -75,25 +87,36 @@ export function VolumeKnob({ initialVolume = 70 }) {
   const angle = MIN_ANGLE + (volume / 100) * (MAX_ANGLE - MIN_ANGLE);
 
   return (
-    <div
-      ref={knobRef}
-      className="volume-knob"
-      role="slider"
-      aria-label="Volume"
-      aria-valuemin={0}
-      aria-valuemax={100}
-      aria-valuenow={Math.round(volume)}
-      tabIndex={0}
-      onPointerDown={handlePointerDown}
-      onPointerMove={handlePointerMove}
-      onPointerUp={handlePointerUp}
-      onPointerCancel={handlePointerUp}
-      onKeyDown={handleKeyDown}
-    >
-      <div
-        className="volume-knob__indicator"
-        style={{ transform: `rotate(${angle}deg)` }}
-      />
+    <div className="volume-control" ref={containerRef}>
+      {isOpen && (
+        <div className="volume-popover">
+          <input
+            ref={sliderRef}
+            type="range"
+            className="volume-popover__slider"
+            aria-label="Volume"
+            min={0}
+            max={100}
+            value={volume}
+            onChange={(event) => setVolume(Number(event.target.value))}
+          />
+        </div>
+      )}
+      <button
+        ref={knobRef}
+        type="button"
+        className="volume-knob"
+        aria-label="Volume"
+        aria-haspopup="true"
+        aria-expanded={isOpen}
+        onClick={() => setIsOpen((open) => !open)}
+        onKeyDown={handleKeyDown}
+      >
+        <div
+          className="volume-knob__indicator"
+          style={{ transform: `rotate(${angle}deg)` }}
+        />
+      </button>
     </div>
   );
 }
