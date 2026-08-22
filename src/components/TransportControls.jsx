@@ -17,12 +17,14 @@ export function TransportControls({
         label="Play"
         onClick={onPlay}
         latched={status === "playing"}
+        isToggle
       />
       <TransportKey
         icon="❙❙"
         label="Pause"
         onClick={onPause}
         latched={status === "paused"}
+        isToggle
       />
       <TransportKey icon="▶▶" label="Skip forward" onClick={onSkipNext} />
       <TransportKey icon="■" label="Stop" onClick={onStop} />

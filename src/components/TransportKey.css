@@ -20,7 +20,7 @@
   box-sizing: border-box;
 }
 
-.transport-key:active,
+.transport-key:active:not(.transport-key--toggle),
 .transport-key--latched {
   transform: translate(2px, 13px);
   box-shadow:
