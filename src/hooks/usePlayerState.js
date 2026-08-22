@@ -19,6 +19,7 @@ export function usePlayerState(tracks) {
     stop: () => dispatch({ type: "STOP" }),
     skipNext: () => dispatch({ type: "SKIP_NEXT" }),
     skipPrev: () => dispatch({ type: "SKIP_PREV" }),
+    trackEnded: () => dispatch({ type: "TRACK_ENDED" }),
     loadAlbum: (tracks) => dispatch({ type: "LOAD_ALBUM", tracks }),
   };
 }

@@ -10,8 +10,17 @@ import { mockTracks } from "./data/mockTracks";
 import "./App.css";
 
 function App() {
-  const { status, track, play, pause, stop, skipNext, skipPrev, loadAlbum } =
-    usePlayerState(mockTracks);
+  const {
+    status,
+    track,
+    play,
+    pause,
+    stop,
+    skipNext,
+    skipPrev,
+    trackEnded,
+    loadAlbum,
+  } = usePlayerState(mockTracks);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const audioRef = useRef(null);
 
@@ -39,7 +48,7 @@ function App() {
   return (
     <div className="player">
       <FullscreenToggle />
-      <audio ref={audioRef} />
+      <audio ref={audioRef} onEnded={trackEnded} />
       <div className="player__record-column">
         <VinylRecord playing={status === "playing"} albumArt={track.coverArt} />
       </div>

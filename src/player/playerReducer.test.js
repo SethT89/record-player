@@ -74,6 +74,24 @@ describe("playerReducer", () => {
     expect(next.status).toBe("stopped");
   });
 
+  it("TRACK_ENDED advances to the next track and keeps playing", () => {
+    const state = { ...createInitialPlayerState(tracks), status: "playing" };
+    const next = playerReducer(state, { type: "TRACK_ENDED" });
+    expect(next.currentTrackIndex).toBe(1);
+    expect(next.status).toBe("playing");
+  });
+
+  it("TRACK_ENDED wraps from the last track back to the first and keeps playing", () => {
+    const state = {
+      ...createInitialPlayerState(tracks),
+      status: "playing",
+      currentTrackIndex: 2,
+    };
+    const next = playerReducer(state, { type: "TRACK_ENDED" });
+    expect(next.currentTrackIndex).toBe(0);
+    expect(next.status).toBe("playing");
+  });
+
   it("LOAD_ALBUM replaces the track list, resets to the first track, and stops", () => {
     const state = {
       ...createInitialPlayerState(tracks),
