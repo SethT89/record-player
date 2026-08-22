@@ -58,19 +58,19 @@ describe("playerReducer", () => {
     expect(next.currentTrackIndex).toBe(2);
   });
 
-  it("SKIP_NEXT forces status to paused even while playing", () => {
+  it("SKIP_NEXT forces status to stopped even while playing", () => {
     const state = { ...createInitialPlayerState(tracks), status: "playing" };
     const next = playerReducer(state, { type: "SKIP_NEXT" });
-    expect(next.status).toBe("paused");
+    expect(next.status).toBe("stopped");
   });
 
-  it("SKIP_PREV forces status to paused even while playing", () => {
+  it("SKIP_PREV forces status to stopped even while playing", () => {
     const state = {
       ...createInitialPlayerState(tracks),
       status: "playing",
       currentTrackIndex: 1,
     };
     const next = playerReducer(state, { type: "SKIP_PREV" });
-    expect(next.status).toBe("paused");
+    expect(next.status).toBe("stopped");
   });
 });

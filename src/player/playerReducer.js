@@ -17,13 +17,13 @@ export function playerReducer(state, action) {
     case "SKIP_NEXT":
       return {
         ...state,
-        status: "paused",
+        status: "stopped",
         currentTrackIndex: (state.currentTrackIndex + 1) % state.tracks.length,
       };
     case "SKIP_PREV":
       return {
         ...state,
-        status: "paused",
+        status: "stopped",
         currentTrackIndex:
           (state.currentTrackIndex - 1 + state.tracks.length) %
           state.tracks.length,

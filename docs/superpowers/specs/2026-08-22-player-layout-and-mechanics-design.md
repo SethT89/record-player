@@ -115,7 +115,7 @@ into a hardcoded mock track list.
 | **Play** | `status = 'playing'`. Record spins (`playing` prop → `animation-play-state: running`). Play key latches down (`latched = true`); Pause key pops up. |
 | **Pause** | `status = 'paused'`. Record freezes in place (`animation-play-state: paused`, holds current rotation). Pause key latches down; Play key pops up. |
 | **Stop** | Momentary press (visually presses and immediately releases — never stays latched). `status = 'stopped'`. Record freezes in place — visually identical to paused, no rotation reset. Both Play and Pause pop up (unlatch). |
-| **Skip back / forward** | Momentary press (no latching). Changes `currentTrackIndex` by ∓1, wrapping at the ends of the mock track list. Always sets `status = 'paused'` regardless of prior state. Display updates to the new track and both `MarqueeText` lines reset/restart their animation. |
+| **Skip back / forward** | Momentary press (no latching). Changes `currentTrackIndex` by ∓1, wrapping at the ends of the mock track list. Always sets `status = 'stopped'` regardless of prior state — not `'paused'`, so neither Play nor Pause visually latches; skipping shouldn't look like a button got pressed. Display updates to the new track and both `MarqueeText` lines reset/restart their animation. |
 
 Only Play and Pause are latching (mutually exclusive — pressing one
 un-latches the other). Stop and the two skip buttons are momentary.
