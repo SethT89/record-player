@@ -38,8 +38,8 @@ export function VinylRecord({ playing, albumArt }) {
 
 const styles = {
   wrapper: {
-    width: "clamp(180px, 40vw, 420px)",
-    height: "clamp(180px, 40vw, 420px)",
+    width: "clamp(280px, 60vw, 680px)",
+    height: "clamp(280px, 60vw, 680px)",
     borderRadius: "50%",
     position: "relative",
     boxShadow: "0 8px 24px rgba(0,0,0,0.5)",

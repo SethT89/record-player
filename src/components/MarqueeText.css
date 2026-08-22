@@ -3,6 +3,7 @@
   overflow: hidden;
   white-space: nowrap;
   display: flex;
+  width: 100%;
 }
 
 .marquee__measure {
