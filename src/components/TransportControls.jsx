@@ -10,7 +10,7 @@ export function TransportControls({
   onSkipPrev,
 }) {
   return (
-    <div className="transport-controls">
+    <div className="transport-controls" role="group" aria-label="Playback controls">
       <TransportKey icon="◀◀" label="Skip back" onClick={onSkipPrev} />
       <TransportKey
         icon="▶"
