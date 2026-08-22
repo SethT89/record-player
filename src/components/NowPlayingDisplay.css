@@ -12,7 +12,7 @@
   min-width: 0;
 }
 
-.now-playing :last-child {
+.now-playing__artist {
   font-size: 13px;
   color: #9a9a9a;
 }

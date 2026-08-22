@@ -5,7 +5,9 @@ export function NowPlayingDisplay({ track }) {
   return (
     <div className="now-playing">
       <MarqueeText text={`${track.title} — ${track.album}`} />
-      <MarqueeText text={track.artist} />
+      <div className="now-playing__artist">
+        <MarqueeText text={track.artist} />
+      </div>
     </div>
   );
 }
