@@ -10,6 +10,21 @@
   color: #e5e5e5;
   font-size: 15px;
   min-width: 0;
+  background: none;
+  border: none;
+  border-radius: 8px;
+  font-family: inherit;
+  cursor: pointer;
+}
+
+.now-playing:hover,
+.now-playing:focus-visible {
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.now-playing:focus-visible {
+  outline: 2px solid #e5e5e5;
+  outline-offset: 2px;
 }
 
 .now-playing__artist {

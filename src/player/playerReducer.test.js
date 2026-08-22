@@ -73,4 +73,17 @@ describe("playerReducer", () => {
     const next = playerReducer(state, { type: "SKIP_PREV" });
     expect(next.status).toBe("stopped");
   });
+
+  it("LOAD_ALBUM replaces the track list, resets to the first track, and stops", () => {
+    const state = {
+      ...createInitialPlayerState(tracks),
+      status: "playing",
+      currentTrackIndex: 2,
+    };
+    const newTracks = [{ title: "New Track", album: "New Album", artist: "New Artist" }];
+    const next = playerReducer(state, { type: "LOAD_ALBUM", tracks: newTracks });
+    expect(next.tracks).toBe(newTracks);
+    expect(next.currentTrackIndex).toBe(0);
+    expect(next.status).toBe("stopped");
+  });
 });

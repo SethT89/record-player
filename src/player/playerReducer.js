@@ -28,6 +28,13 @@ export function playerReducer(state, action) {
           (state.currentTrackIndex - 1 + state.tracks.length) %
           state.tracks.length,
       };
+    case "LOAD_ALBUM":
+      return {
+        ...state,
+        status: "stopped",
+        currentTrackIndex: 0,
+        tracks: action.tracks,
+      };
     default:
       return state;
   }
