@@ -1,0 +1,113 @@
+.vinyl-record {
+  width: clamp(280px, 60vw, 680px);
+  height: clamp(280px, 60vw, 680px);
+  border-radius: 50%;
+  position: relative;
+  box-sizing: border-box;
+  border: 3px solid transparent;
+  background: none;
+  padding: 0;
+  font: inherit;
+  cursor: pointer;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.vinyl-record:hover,
+.vinyl-record:focus-visible {
+  border-color: #ffb347;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5), 0 0 20px rgba(255, 179, 71, 0.5);
+}
+
+.vinyl-record:focus-visible {
+  outline: 2px solid #e5e5e5;
+  outline-offset: 4px;
+}
+
+.vinyl-record__sheen {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background: radial-gradient(circle at 32% 28%, rgba(255, 255, 255, 0.1), transparent 42%);
+  pointer-events: none;
+  z-index: 2;
+}
+
+.vinyl-record__tint {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background: transparent;
+  pointer-events: none;
+  z-index: 3;
+  transition: background 0.1s ease;
+}
+
+.vinyl-record:active .vinyl-record__tint {
+  background: rgba(255, 179, 71, 0.12);
+}
+
+.vinyl-record__disc {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: repeating-radial-gradient(
+    circle at center,
+    #161616 0px,
+    #161616 2px,
+    #282828 2.6px,
+    #161616 3.2px
+  );
+  animation: spin 3.5s linear infinite;
+  animation-play-state: paused;
+}
+
+.vinyl-record__disc--playing {
+  animation-play-state: running;
+}
+
+.vinyl-record__label {
+  width: 34%;
+  height: 34%;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #d85a30, #993c1d);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.3);
+}
+
+.vinyl-record__album-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.vinyl-record__label-text {
+  font-size: 10px;
+  color: rgba(255, 255, 255, 0.7);
+  letter-spacing: 0.5px;
+}
+
+.vinyl-record__spindle {
+  position: absolute;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: #0a0a0a;
+  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.08);
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}

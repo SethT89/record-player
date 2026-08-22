@@ -45,16 +45,22 @@ function App() {
     setIsSearchOpen(false);
   };
 
+  const openSearch = () => setIsSearchOpen(true);
+
   return (
     <div className="player">
       <FullscreenToggle />
       <audio ref={audioRef} onEnded={trackEnded} />
       <div className="player__record-column">
-        <VinylRecord playing={status === "playing"} albumArt={track.coverArt} />
+        <VinylRecord
+          playing={status === "playing"}
+          albumArt={track.coverArt}
+          onClick={openSearch}
+        />
       </div>
       <div className="player__control-column">
         <div className="player__display-row">
-          <NowPlayingDisplay track={track} onClick={() => setIsSearchOpen(true)} />
+          <NowPlayingDisplay track={track} onClick={openSearch} />
           <VolumeKnob />
         </div>
         <TransportControls
