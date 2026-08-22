@@ -1,0 +1,25 @@
+.volume-knob {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 30%, #6a6d70, #2c2d2f 75%);
+  box-shadow:
+    0 3px 0 #141516,
+    0 5px 8px rgba(0, 0, 0, 0.5);
+  flex-shrink: 0;
+  position: relative;
+  cursor: grab;
+  touch-action: none;
+}
+
+.volume-knob__indicator {
+  position: absolute;
+  top: 4px;
+  left: 50%;
+  width: 3px;
+  height: 14px;
+  margin-left: -1.5px;
+  background: #e5e5e5;
+  border-radius: 2px;
+  transform-origin: 50% 18px;
+}
