@@ -1,0 +1,37 @@
+.transport-key {
+  width: 52px;
+  height: 88px;
+  border: none;
+  border-radius: 7px;
+  background: linear-gradient(180deg, #63666a 0%, #3d4044 60%, #34363a 100%);
+  box-shadow:
+    0 3px 0 0 #2c2e31,
+    0 6px 0 0 #26282b,
+    0 9px 0 0 #202225,
+    0 12px 0 0 #1a1c1e,
+    0 15px 16px rgba(0, 0, 0, 0.5);
+  transform: translate(0, 0);
+  transition: transform 0.09s ease, box-shadow 0.09s ease;
+  cursor: pointer;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding-top: 14px;
+  box-sizing: border-box;
+}
+
+.transport-key:active,
+.transport-key--latched {
+  transform: translate(2px, 13px);
+  box-shadow:
+    0 1px 0 0 #2c2e31,
+    0 2px 6px rgba(0, 0, 0, 0.4);
+}
+
+.transport-key__icon {
+  font-size: 13px;
+  color: #3a3c40;
+  text-shadow:
+    0 1px 0 rgba(255, 255, 255, 0.35),
+    0 -1px 1px rgba(0, 0, 0, 0.7);
+}
