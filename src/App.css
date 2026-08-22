@@ -9,7 +9,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 24px;
+  padding: 24px 0 24px 24px;
 }
 
 .player__control-column {
@@ -19,7 +19,7 @@
   align-items: center;
   justify-content: center;
   gap: 18px;
-  padding: 24px;
+  padding: 24px 24px 24px 8px;
   min-width: 240px;
 }
 
