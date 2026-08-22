@@ -1,4 +1,4 @@
-import { useCallback, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import "./VolumeKnob.css";
 
 const MIN_ANGLE = -135;
@@ -11,6 +11,7 @@ const clampVolume = (value) => Math.min(100, Math.max(0, value));
 export function VolumeKnob({ initialVolume = 70 }) {
   const [volume, setVolume] = useState(initialVolume);
   const dragState = useRef(null);
+  const knobRef = useRef(null);
 
   const handlePointerDown = useCallback(
     (event) => {
@@ -36,6 +37,15 @@ export function VolumeKnob({ initialVolume = 70 }) {
     event.preventDefault();
     setVolume((current) => clampVolume(current - Math.sign(event.deltaY) * WHEEL_STEP));
   }, []);
+
+  useEffect(() => {
+    const element = knobRef.current;
+    if (!element) return undefined;
+    element.addEventListener("wheel", handleWheel, { passive: false });
+    return () => {
+      element.removeEventListener("wheel", handleWheel);
+    };
+  }, [handleWheel]);
 
   const handleKeyDown = useCallback((event) => {
     switch (event.key) {
@@ -66,6 +76,7 @@ export function VolumeKnob({ initialVolume = 70 }) {
 
   return (
     <div
+      ref={knobRef}
       className="volume-knob"
       role="slider"
       aria-label="Volume"
@@ -78,7 +89,6 @@ export function VolumeKnob({ initialVolume = 70 }) {
       onPointerUp={handlePointerUp}
       onPointerCancel={handlePointerUp}
       onKeyDown={handleKeyDown}
-      onWheel={handleWheel}
     >
       <div
         className="volume-knob__indicator"
