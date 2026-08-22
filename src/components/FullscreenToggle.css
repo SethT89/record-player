@@ -1,0 +1,44 @@
+.fullscreen-zone {
+  position: fixed;
+  top: 0;
+  right: 0;
+  width: 96px;
+  height: 96px;
+  display: flex;
+  align-items: flex-start;
+  justify-content: flex-end;
+  padding: 14px;
+  box-sizing: border-box;
+  z-index: 10;
+}
+
+.fullscreen-toggle {
+  width: 30px;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  border-radius: 6px;
+  background: rgba(255, 255, 255, 0.06);
+  color: #d8d8d8;
+  cursor: pointer;
+  opacity: 0;
+  transform: scale(0.9);
+  transition: opacity 0.15s ease, transform 0.15s ease, background 0.15s ease;
+}
+
+.fullscreen-zone:hover .fullscreen-toggle,
+.fullscreen-toggle:focus-visible {
+  opacity: 1;
+  transform: scale(1);
+}
+
+.fullscreen-toggle:hover {
+  background: rgba(255, 255, 255, 0.12);
+}
+
+.fullscreen-toggle:focus-visible {
+  outline: 2px solid #e5e5e5;
+  outline-offset: 2px;
+}

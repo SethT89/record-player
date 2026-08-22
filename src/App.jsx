@@ -2,6 +2,7 @@ import { VinylRecord } from "./components/VinylRecord";
 import { NowPlayingDisplay } from "./components/NowPlayingDisplay";
 import { VolumeKnob } from "./components/VolumeKnob";
 import { TransportControls } from "./components/TransportControls";
+import { FullscreenToggle } from "./components/FullscreenToggle";
 import { usePlayerState } from "./hooks/usePlayerState";
 import { mockTracks } from "./data/mockTracks";
 import "./App.css";
@@ -12,6 +13,7 @@ function App() {
 
   return (
     <div className="player">
+      <FullscreenToggle />
       <div className="player__record-column">
         <VinylRecord playing={status === "playing"} />
       </div>
