@@ -62,3 +62,17 @@
   outline: 2px solid #e5e5e5;
   outline-offset: 2px;
 }
+
+@media (max-width: 640px) {
+  .volume-popover {
+    left: auto;
+    right: 0;
+    transform: none;
+    padding: 16px 22px;
+  }
+
+  .volume-popover__slider {
+    width: 44px;
+    height: 140px;
+  }
+}

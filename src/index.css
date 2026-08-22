@@ -3,8 +3,13 @@
   font: 16px/1.5 -apple-system, "Segoe UI", Roboto, sans-serif;
 }
 
+html {
+  overscroll-behavior-y: none;
+}
+
 body {
   margin: 0;
   background: #121212;
   color: #e5e5e5;
+  overscroll-behavior-y: none;
 }
