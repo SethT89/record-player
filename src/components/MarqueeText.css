@@ -18,8 +18,26 @@
 }
 
 .marquee__copy {
+  position: relative;
+  display: inline-block;
   white-space: nowrap;
   padding-right: 32px;
+  font-family: "DSEG14 Classic", monospace;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+
+.marquee__ghost {
+  color: rgba(255, 179, 71, 0.12);
+}
+
+.marquee__lit {
+  position: absolute;
+  inset: 0;
+  color: #ffb347;
+  text-shadow:
+    0 0 3px rgba(255, 179, 71, 0.7),
+    0 0 9px rgba(255, 179, 71, 0.3);
 }
 
 .marquee__track--scrolling {

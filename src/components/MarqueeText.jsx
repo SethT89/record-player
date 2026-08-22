@@ -14,7 +14,23 @@ import "./MarqueeText.css";
   the second copy reaches the start position is visually indistinguishable
   from the initial frame — so the loop from 100% back to 0% reads as
   seamless instead of jumping.
+
+  Each copy renders a dim "ghost" backdrop (an all-segments-lit stand-in,
+  same length as the real text) behind the bright "lit" text, which is
+  what sells the segmented-LCD look rather than just blocky glowing text.
 */
+function MarqueeCopy({ text, hidden }) {
+  const ghost = "8".repeat(text.length);
+  return (
+    <span className="marquee__copy" aria-hidden={hidden || undefined}>
+      <span className="marquee__ghost" aria-hidden="true">
+        {ghost}
+      </span>
+      <span className="marquee__lit">{text}</span>
+    </span>
+  );
+}
+
 export function MarqueeText({ text }) {
   const containerRef = useRef(null);
   const measureRef = useRef(null);
@@ -43,14 +59,12 @@ export function MarqueeText({ text }) {
       </span>
       {isOverflowing ? (
         <div key={text} className="marquee__track marquee__track--scrolling">
-          <span className="marquee__copy">{text}</span>
-          <span className="marquee__copy" aria-hidden="true">
-            {text}
-          </span>
+          <MarqueeCopy text={text} />
+          <MarqueeCopy text={text} hidden />
         </div>
       ) : (
         <div className="marquee__track">
-          <span className="marquee__copy">{text}</span>
+          <MarqueeCopy text={text} />
         </div>
       )}
     </div>
