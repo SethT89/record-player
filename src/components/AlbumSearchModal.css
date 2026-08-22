@@ -31,12 +31,13 @@
 
 .album-search-input {
   flex: 1;
+  min-width: 0;
   background: #101112;
   border: 1px solid rgba(255, 255, 255, 0.1);
   border-radius: 6px;
-  padding: 10px 12px;
+  padding: 12px 14px;
   color: #e5e5e5;
-  font-size: 14px;
+  font-size: 16px;
 }
 
 .album-search-input:focus-visible {
@@ -48,10 +49,11 @@
   background: rgba(255, 255, 255, 0.08);
   border: none;
   border-radius: 6px;
-  padding: 10px 16px;
+  padding: 12px 18px;
   color: #e5e5e5;
-  font-size: 14px;
+  font-size: 16px;
   cursor: pointer;
+  flex-shrink: 0;
 }
 
 .album-search-submit:hover {
@@ -83,7 +85,7 @@
   background: none;
   border: none;
   border-radius: 6px;
-  padding: 8px;
+  padding: 10px 8px;
   cursor: pointer;
   text-align: left;
 }
@@ -94,8 +96,8 @@
 }
 
 .album-search-result__art {
-  width: 44px;
-  height: 44px;
+  width: 48px;
+  height: 48px;
   border-radius: 4px;
   flex-shrink: 0;
   object-fit: cover;
@@ -109,7 +111,7 @@
 
 .album-search-result__title {
   color: #e5e5e5;
-  font-size: 14px;
+  font-size: 16px;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -117,7 +119,7 @@
 
 .album-search-result__artist {
   color: #9a9a9a;
-  font-size: 12px;
+  font-size: 14px;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
