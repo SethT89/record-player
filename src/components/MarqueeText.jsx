@@ -1,4 +1,5 @@
 import { useLayoutEffect, useMemo, useRef, useState } from "react";
+import { useDisplayFontReady } from "../hooks/useDisplayFontReady";
 import "./MarqueeText.css";
 
 /*
@@ -26,6 +27,12 @@ import "./MarqueeText.css";
   text width so every title moves at the same, comfortably readable
   pace, with a fixed hold time before/after each pass regardless of
   title length.
+
+  Nothing renders until useDisplayFontReady confirms the real display
+  typeface is active — otherwise both the overflow measurement and the
+  first paint could use the browser's fallback font's metrics, which are
+  a different size than the real one, instead of waiting the (normally
+  imperceptibly brief) moment for the correct font.
 */
 let nextMarqueeId = 0;
 
@@ -51,8 +58,10 @@ export function MarqueeText({ text }) {
   const [isOverflowing, setIsOverflowing] = useState(false);
   const [textWidth, setTextWidth] = useState(0);
   const [animationName] = useState(() => `marquee-scroll-${nextMarqueeId++}`);
+  const fontReady = useDisplayFontReady();
 
   useLayoutEffect(() => {
+    if (!fontReady) return;
     const container = containerRef.current;
     const measure = measureRef.current;
     if (!container || !measure) return;
@@ -67,7 +76,7 @@ export function MarqueeText({ text }) {
     const resizeObserver = new ResizeObserver(checkOverflow);
     resizeObserver.observe(container);
     return () => resizeObserver.disconnect();
-  }, [text]);
+  }, [text, fontReady]);
 
   const { totalDuration, holdPercent } = useMemo(() => {
     const distance = textWidth + COPY_GAP_PX;
@@ -81,30 +90,34 @@ export function MarqueeText({ text }) {
 
   return (
     <div className="marquee" ref={containerRef}>
-      <span className="marquee__measure" ref={measureRef}>
-        {text}
-      </span>
-      {isOverflowing ? (
+      {fontReady && (
         <>
-          <style>{`
-            @keyframes ${animationName} {
-              0%, ${holdPercent.toFixed(2)}% { transform: translateX(0); }
-              ${(100 - holdPercent).toFixed(2)}%, 100% { transform: translateX(-50%); }
-            }
-          `}</style>
-          <div
-            key={text}
-            className="marquee__track marquee__track--scrolling"
-            style={{ animationName, animationDuration: `${totalDuration.toFixed(2)}s` }}
-          >
-            <MarqueeCopy text={text} />
-            <MarqueeCopy text={text} hidden />
-          </div>
+          <span className="marquee__measure" ref={measureRef}>
+            {text}
+          </span>
+          {isOverflowing ? (
+            <>
+              <style>{`
+                @keyframes ${animationName} {
+                  0%, ${holdPercent.toFixed(2)}% { transform: translateX(0); }
+                  ${(100 - holdPercent).toFixed(2)}%, 100% { transform: translateX(-50%); }
+                }
+              `}</style>
+              <div
+                key={text}
+                className="marquee__track marquee__track--scrolling"
+                style={{ animationName, animationDuration: `${totalDuration.toFixed(2)}s` }}
+              >
+                <MarqueeCopy text={text} />
+                <MarqueeCopy text={text} hidden />
+              </div>
+            </>
+          ) : (
+            <div className="marquee__track">
+              <MarqueeCopy text={text} />
+            </div>
+          )}
         </>
-      ) : (
-        <div className="marquee__track">
-          <MarqueeCopy text={text} />
-        </div>
       )}
     </div>
   );
