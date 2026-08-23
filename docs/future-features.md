@@ -56,9 +56,19 @@ scoped.
 
 Same idea as Plex, for Jellyfin servers. Jellyfin's API is, in spirit,
 close to Subsonic's (open, well-documented, built for third-party
-clients), and Jellyfin's own web client also talks to the server directly
-from the browser — so the same "verify before assuming a backend is
-required" note applies here too.
+clients, plain username/password auth — no external account needed,
+unlike Plex). This is likely the lowest-effort of the three
+music-service integrations to build, since the pattern from Subsonic
+(API client behind one URL-building chokepoint, connection persisted in
+`localStorage`, browse + search modals) should transfer directly.
+
+**Verified (2026-08-23):** checked `access-control-allow-origin` against
+the public Jellyfin demo server (`demo.jellyfin.org`) — it returns `*`,
+and `/System/Info/Public` responds correctly. Confirms the same
+direct-browser-call approach used for Subsonic is viable, at least for
+that server's configuration; still worth a similar check against
+whatever server this actually gets built/tested with, since CORS is a
+per-server setting, not a Jellyfin-wide guarantee.
 
 ## User accounts / user management
 
