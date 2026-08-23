@@ -1,0 +1,81 @@
+.subsonic-connect-scrim {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.65);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 100;
+  padding: 24px;
+  box-sizing: border-box;
+}
+
+.subsonic-connect-modal {
+  width: 100%;
+  max-width: 360px;
+  display: flex;
+  flex-direction: column;
+  background: #1c1d1f;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 12px;
+  padding: 20px;
+  box-sizing: border-box;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+}
+
+.subsonic-connect-form {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.subsonic-connect-label {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  color: #9a9a9a;
+  font-size: 13px;
+}
+
+.subsonic-connect-input {
+  background: #101112;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 6px;
+  padding: 12px 14px;
+  color: #e5e5e5;
+  font-size: 16px;
+}
+
+.subsonic-connect-input:focus-visible {
+  outline: 2px solid #e5e5e5;
+  outline-offset: 1px;
+}
+
+.subsonic-connect-submit {
+  background: rgba(255, 255, 255, 0.08);
+  border: none;
+  border-radius: 6px;
+  padding: 12px 18px;
+  color: #e5e5e5;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.subsonic-connect-submit:hover {
+  background: rgba(255, 255, 255, 0.14);
+}
+
+.subsonic-connect-submit:disabled {
+  opacity: 0.6;
+  cursor: default;
+}
+
+.subsonic-connect-status {
+  margin: 12px 0 0;
+  font-size: 13px;
+  color: #9a9a9a;
+}
+
+.subsonic-connect-status--error {
+  color: #e28a8a;
+}
