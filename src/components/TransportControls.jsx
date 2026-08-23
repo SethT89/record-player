@@ -26,8 +26,8 @@ export function TransportControls({
         latched={status === "paused"}
         isToggle
       />
-      <TransportKey icon="▶▶" label="Skip forward" onClick={onSkipNext} />
       <TransportKey icon="■" label="Stop" onClick={onStop} />
+      <TransportKey icon="▶▶" label="Skip forward" onClick={onSkipNext} />
     </div>
   );
 }
