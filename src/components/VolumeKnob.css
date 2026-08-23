@@ -3,6 +3,27 @@
   flex-shrink: 0;
 }
 
+/*
+  Hidden on touch-primary devices (phones and tablets) — HTMLMediaElement
+  volume can't actually be controlled from a webpage on iOS (and this
+  matches it, since Android doesn't offer per-page audio gain control via
+  plain <audio> either), so the knob would just be a non-functional
+  decoration there. The hardware volume buttons are the only real
+  control on those platforms, same as how Spotify's mobile app has no
+  in-app volume slider at all — desktop keeps this control since desktop
+  browsers do let a page scale its own output level independently.
+
+  (hover: none) and (pointer: coarse) targets touchscreens specifically,
+  rather than a screen-width breakpoint — width alone would misidentify
+  a tablet (iPads often report a desktop-class width) or a narrow desktop
+  browser window.
+*/
+@media (hover: none) and (pointer: coarse) {
+  .volume-control {
+    display: none;
+  }
+}
+
 .volume-knob {
   width: 44px;
   height: 44px;
