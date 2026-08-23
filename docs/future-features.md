@@ -33,3 +33,56 @@ Not scoped further than that — real design work (which protocol(s) to
 support, UI for selecting an output device, how it interacts with the
 existing `<audio>`-based playback path) happens if/when this gets picked
 up.
+
+## Plex integration
+
+A fourth music source alongside Deezer, local files, and Subsonic:
+connect to a Plex Media Server and browse/play a personal library, same
+shape as the Subsonic integration.
+
+**Backend needed?** Worth double-checking against a real server before
+assuming so, rather than taking it as given — we made the same assumption
+about Subsonic and it turned out not to hold. Plex's own official web
+client is itself a browser-based app that talks to a Plex Media Server
+directly, which means the server generally does support direct
+browser-to-server calls (same CORS caveat already documented for
+Subsonic: it depends on the specific server's configuration, not
+guaranteed universally). A backend/proxy may still end up useful for
+other reasons (see User accounts below), but "Plex requires a backend"
+isn't confirmed — check it directly against a real server when this gets
+scoped.
+
+## Jellyfin integration
+
+Same idea as Plex, for Jellyfin servers. Jellyfin's API is, in spirit,
+close to Subsonic's (open, well-documented, built for third-party
+clients), and Jellyfin's own web client also talks to the server directly
+from the browser — so the same "verify before assuming a backend is
+required" note applies here too.
+
+## User accounts / user management
+
+Not needed yet, and shouldn't be built speculatively — this app has
+deliberately stayed backend-less and account-less so far (Subsonic
+credentials, for example, live in `localStorage`, isolated per
+browser/device with no server involved). Add real accounts when one of
+these actually becomes true, not before:
+
+- **A shared backend/proxy gets built** (e.g., to work around a
+  music-server's CORS restrictions, for Sonos-style local-network
+  features, or any other reason). The moment a backend exists and serves
+  more than one person, it needs some way to know *whose* request it's
+  handling — that's the point accounts stop being optional.
+- **Cross-device sync becomes a real ask** — e.g. someone wants their
+  saved Subsonic/Plex/Jellyfin connection to follow them from their phone
+  to their laptop. `localStorage` fundamentally can't do this (it's tied
+  to one browser on one device); syncing requires both a backend to sync
+  through and accounts to know which device's data belongs to whom.
+
+Note this is a different problem from Plex/Jellyfin/Subsonic's own
+built-in multi-user support (all three already let multiple people have
+separate logins on the *same media server*) — that's already handled on
+their end and doesn't require anything from us. This section is
+specifically about whether *our app itself* ever needs its own accounts
+system, which is a much bigger addition (auth, sessions, a database,
+hosting for a real backend) than anything else on this list.
