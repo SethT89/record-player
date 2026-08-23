@@ -18,17 +18,27 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
   gap: 18px;
   min-width: 240px;
+}
+
+/*
+  Both rows are pinned to the same explicit width so the display row's
+  left edge lines up with Skip back and the volume knob's right edge
+  lines up with Stop, regardless of how long the current track title is.
+  300px = 5 transport keys (52px, see TransportKey.css) + 4 gaps (10px,
+  see TransportControls.css). Update this if either of those change.
+*/
+.player__display-row,
+.transport-controls {
+  width: 300px;
 }
 
 .player__display-row {
   display: flex;
   gap: 10px;
   align-items: center;
-  width: 100%;
-  max-width: 360px;
+  min-width: 0;
 }
 
 @media (max-width: 640px) {

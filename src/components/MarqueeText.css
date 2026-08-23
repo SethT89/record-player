@@ -45,10 +45,6 @@
   animation: marquee-scroll 10s linear infinite;
 }
 
-.marquee__track:not(.marquee__track--scrolling) {
-  margin: 0 auto;
-}
-
 @keyframes marquee-scroll {
   0%,
   15% {
