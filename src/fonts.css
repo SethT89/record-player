@@ -1,0 +1,31 @@
+/*
+  Self-hosted (not loaded from a third-party CDN) so the display typeface
+  is always available immediately with no network round-trip and no risk
+  of a visible flash of fallback text before it loads. Licensed under the
+  SIL Open Font License — see assets/fonts/LICENSE.
+
+  font-display: block gives the browser a brief window to use the real
+  font before falling back, instead of momentarily showing (and then
+  visibly swapping away from) the fallback font — appropriate here since
+  the font is same-origin and loads fast.
+*/
+@font-face {
+  font-family: "DSEG14 Classic";
+  font-style: normal;
+  font-weight: 400;
+  font-display: block;
+  src:
+    url("./assets/fonts/dseg14-classic-latin-400-normal.woff2") format("woff2"),
+    url("./assets/fonts/dseg14-classic-latin-400-normal.woff") format("woff");
+}
+
+/*
+  Single point of configuration for the LCD/segment-display typeface used
+  by the now-playing marquee. Components reference var(--display-font)
+  rather than naming "DSEG14 Classic" directly, so swapping the theme's
+  display typeface later is a one-line change here instead of a hunt
+  through component CSS.
+*/
+:root {
+  --display-font: "DSEG14 Classic", monospace;
+}
