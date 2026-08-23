@@ -34,9 +34,9 @@
 }
 
 .transport-key__icon {
-  font-size: 13px;
+  display: flex;
   color: #3a3c40;
-  text-shadow:
-    0 1px 0 rgba(255, 255, 255, 0.35),
-    0 -1px 1px rgba(0, 0, 0, 0.7);
+  filter:
+    drop-shadow(0 1px 0 rgba(255, 255, 255, 0.35))
+    drop-shadow(0 -1px 1px rgba(0, 0, 0, 0.7));
 }
