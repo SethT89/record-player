@@ -37,8 +37,8 @@ function PlayIcon() {
 function PauseIcon() {
   return (
     <svg viewBox="0 0 24 24" width="26" height="26" fill="currentColor">
-      <rect x="6" y="4" width="5" height="16" rx="1" />
-      <rect x="13" y="4" width="5" height="16" rx="1" />
+      <rect x="6" y="4" width="4" height="16" rx="1" />
+      <rect x="14" y="4" width="4" height="16" rx="1" />
     </svg>
   );
 }
