@@ -16,13 +16,23 @@ const clampVolume = (value) => Math.min(100, Math.max(0, value));
   button now. Clicking it opens a vertical slider popover, which is a
   much easier target to actually adjust — the dial's rotation still
   reflects whatever the slider (or keyboard, or the wheel) sets it to.
+
+  Props:
+    - initialVolume: number (optional, default 70) — starting value, 0-100.
+    - onVolumeChange: function (optional) — called with the current 0-100
+        value whenever it changes (including once on mount), so a parent
+        can apply it to real audio playback (which expects 0-1, not 0-100).
 */
-export function VolumeKnob({ initialVolume = 70 }) {
+export function VolumeKnob({ initialVolume = 70, onVolumeChange }) {
   const [volume, setVolume] = useState(initialVolume);
   const [isOpen, setIsOpen] = useState(false);
   const containerRef = useRef(null);
   const knobRef = useRef(null);
   const sliderRef = useRef(null);
+
+  useEffect(() => {
+    onVolumeChange?.(volume);
+  }, [volume, onVolumeChange]);
 
   const handleWheel = useCallback((event) => {
     event.preventDefault();

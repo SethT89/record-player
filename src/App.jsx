@@ -47,6 +47,12 @@ function App() {
 
   const openSearch = () => setIsSearchOpen(true);
 
+  const handleVolumeChange = (volume) => {
+    if (audioRef.current) {
+      audioRef.current.volume = volume / 100;
+    }
+  };
+
   return (
     <div className="player">
       <FullscreenToggle />
@@ -61,7 +67,7 @@ function App() {
       <div className="player__control-column">
         <div className="player__display-row">
           <NowPlayingDisplay track={track} onClick={openSearch} />
-          <VolumeKnob />
+          <VolumeKnob onVolumeChange={handleVolumeChange} />
         </div>
         <TransportControls
           status={status}
