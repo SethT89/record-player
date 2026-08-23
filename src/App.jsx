@@ -8,10 +8,13 @@ import { SourceMenu } from "./components/SourceMenu";
 import { AlbumSearchModal } from "./components/AlbumSearchModal";
 import { SubsonicConnectModal } from "./components/SubsonicConnectModal";
 import { SubsonicBrowseModal } from "./components/SubsonicBrowseModal";
+import { JellyfinConnectModal } from "./components/JellyfinConnectModal";
+import { JellyfinBrowseModal } from "./components/JellyfinBrowseModal";
 import { usePlayerState } from "./hooks/usePlayerState";
 import { mockTracks } from "./data/mockTracks";
 import { readTrackMetadata } from "./api/localMetadata";
-import { loadConnection } from "./api/subsonicConnection";
+import { loadConnection as loadSubsonicConnection } from "./api/subsonicConnection";
+import { loadConnection as loadJellyfinConnection } from "./api/jellyfinConnection";
 import "./App.css";
 
 function App() {
@@ -28,8 +31,10 @@ function App() {
     loadAlbum,
   } = usePlayerState(mockTracks);
   // null | "source" | "deezer" | "subsonic-connect" | "subsonic-browse"
+  // | "jellyfin-connect" | "jellyfin-browse"
   const [activeModal, setActiveModal] = useState(null);
   const [subsonicConnection, setSubsonicConnection] = useState(null);
+  const [jellyfinConnection, setJellyfinConnection] = useState(null);
   const audioRef = useRef(null);
   const folderInputRef = useRef(null);
   const objectUrlsRef = useRef([]);
@@ -67,7 +72,7 @@ function App() {
   const handleSelectDeezer = () => setActiveModal("deezer");
 
   const handleSelectSubsonic = () => {
-    const existing = loadConnection();
+    const existing = loadSubsonicConnection();
     if (existing) {
       setSubsonicConnection(existing);
       setActiveModal("subsonic-browse");
@@ -84,6 +89,26 @@ function App() {
   const handleChangeServer = () => {
     setSubsonicConnection(null);
     setActiveModal("subsonic-connect");
+  };
+
+  const handleSelectJellyfin = () => {
+    const existing = loadJellyfinConnection();
+    if (existing) {
+      setJellyfinConnection(existing);
+      setActiveModal("jellyfin-browse");
+    } else {
+      setActiveModal("jellyfin-connect");
+    }
+  };
+
+  const handleJellyfinConnected = (connection) => {
+    setJellyfinConnection(connection);
+    setActiveModal("jellyfin-browse");
+  };
+
+  const handleChangeJellyfinServer = () => {
+    setJellyfinConnection(null);
+    setActiveModal("jellyfin-connect");
   };
 
   const handleSelectFiles = () => {
@@ -171,6 +196,7 @@ function App() {
           onSelectDeezer={handleSelectDeezer}
           onSelectFiles={handleSelectFiles}
           onSelectSubsonic={handleSelectSubsonic}
+          onSelectJellyfin={handleSelectJellyfin}
         />
       )}
       {activeModal === "deezer" && (
@@ -191,6 +217,20 @@ function App() {
           onClose={() => setActiveModal(null)}
           onAlbumSelected={handleAlbumSelected}
           onChangeServer={handleChangeServer}
+        />
+      )}
+      {activeModal === "jellyfin-connect" && (
+        <JellyfinConnectModal
+          onClose={() => setActiveModal(null)}
+          onConnected={handleJellyfinConnected}
+        />
+      )}
+      {activeModal === "jellyfin-browse" && jellyfinConnection && (
+        <JellyfinBrowseModal
+          connection={jellyfinConnection}
+          onClose={() => setActiveModal(null)}
+          onAlbumSelected={handleAlbumSelected}
+          onChangeServer={handleChangeJellyfinServer}
         />
       )}
     </div>
