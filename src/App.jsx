@@ -25,6 +25,14 @@ function App() {
   const [activeModal, setActiveModal] = useState(null); // null | "source" | "deezer"
   const audioRef = useRef(null);
   const folderInputRef = useRef(null);
+  const objectUrlsRef = useRef([]);
+
+  useEffect(() => {
+    // Revoke local-file blob URLs on unmount so they don't leak memory.
+    return () => {
+      objectUrlsRef.current.forEach((url) => URL.revokeObjectURL(url));
+    };
+  }, []);
 
   useEffect(() => {
     const audio = audioRef.current;
@@ -57,10 +65,29 @@ function App() {
   };
 
   const handleFolderSelected = (event) => {
-    // Local file playback isn't wired up yet — this just opens the
-    // native picker for now, per the current scope.
-    console.log("Folder selected:", event.target.files);
+    const files = [...event.target.files]
+      .filter((file) => file.type.startsWith("audio/"))
+      .sort((a, b) => a.webkitRelativePath.localeCompare(b.webkitRelativePath));
+
     event.target.value = "";
+
+    if (files.length === 0) return;
+
+    objectUrlsRef.current.forEach((url) => URL.revokeObjectURL(url));
+    objectUrlsRef.current = [];
+
+    const tracks = files.map((file) => {
+      const url = URL.createObjectURL(file);
+      objectUrlsRef.current.push(url);
+      return {
+        title: file.name.replace(/\.[^/.]+$/, ""),
+        album: "My Files",
+        artist: "Unknown Artist",
+        previewUrl: url,
+      };
+    });
+
+    loadAlbum(tracks);
   };
 
   const handleVolumeChange = (volume) => {

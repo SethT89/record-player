@@ -6,8 +6,8 @@ import "./SourceMenu.css";
   The first thing you see when clicking the record or the now-playing
   display: a choice of where to load music from. "Deezer Demo" opens
   the existing album search. "My Files" opens a native folder picker
-  (browser-native, not our own UI) — for now, picking a folder doesn't
-  do anything with the files yet; wiring local playback is a follow-up.
+  (browser-native, not our own UI) — audio files found in the folder
+  become the new track list, playable the same way as a Deezer album.
 */
 export function SourceMenu({ onClose, onSelectFiles, onSelectDeezer }) {
   return (
