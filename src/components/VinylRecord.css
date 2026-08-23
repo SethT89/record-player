@@ -1,6 +1,10 @@
+:root {
+  --vinyl-record-size: clamp(280px, min(80vw, 80vh), 1000px);
+}
+
 .vinyl-record {
-  width: clamp(280px, min(80vw, 80vh), 1000px);
-  height: clamp(280px, min(80vw, 80vh), 1000px);
+  width: var(--vinyl-record-size);
+  height: var(--vinyl-record-size);
   border-radius: 50%;
   position: relative;
   box-sizing: border-box;
