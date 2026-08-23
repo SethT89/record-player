@@ -7,7 +7,7 @@ export function NowPlayingDisplay({ track, onClick }) {
       type="button"
       className="now-playing"
       onClick={onClick}
-      aria-label="Search for an album"
+      aria-label="Choose a music source"
     >
       <MarqueeText text={`${track.title} — ${track.album}`} />
       <div className="now-playing__artist">

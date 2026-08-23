@@ -8,8 +8,8 @@ import "./VinylRecord.css";
     - albumArt: string (optional) — image URL for the center label.
         Falls back to a plain gradient placeholder if not provided.
     - onClick: function (optional) — invoked when the record is clicked.
-        Used to open the album search modal, same action as clicking the
-        now-playing display.
+        Used to open the source-selection menu, same action as clicking
+        the now-playing display.
 */
 export function VinylRecord({ playing, albumArt, onClick }) {
   return (
@@ -17,7 +17,7 @@ export function VinylRecord({ playing, albumArt, onClick }) {
       type="button"
       className="vinyl-record"
       onClick={onClick}
-      aria-label="Search for an album"
+      aria-label="Choose a music source"
     >
       <div className="vinyl-record__sheen" />
       <div className="vinyl-record__tint" />

@@ -4,6 +4,7 @@ import { NowPlayingDisplay } from "./components/NowPlayingDisplay";
 import { VolumeKnob } from "./components/VolumeKnob";
 import { TransportControls } from "./components/TransportControls";
 import { FullscreenToggle } from "./components/FullscreenToggle";
+import { SourceMenu } from "./components/SourceMenu";
 import { AlbumSearchModal } from "./components/AlbumSearchModal";
 import { usePlayerState } from "./hooks/usePlayerState";
 import { mockTracks } from "./data/mockTracks";
@@ -21,8 +22,9 @@ function App() {
     trackEnded,
     loadAlbum,
   } = usePlayerState(mockTracks);
-  const [isSearchOpen, setIsSearchOpen] = useState(false);
+  const [activeModal, setActiveModal] = useState(null); // null | "source" | "deezer"
   const audioRef = useRef(null);
+  const folderInputRef = useRef(null);
 
   useEffect(() => {
     const audio = audioRef.current;
@@ -42,10 +44,24 @@ function App() {
 
   const handleAlbumSelected = (tracks) => {
     loadAlbum(tracks);
-    setIsSearchOpen(false);
+    setActiveModal(null);
   };
 
-  const openSearch = () => setIsSearchOpen(true);
+  const openSourceMenu = () => setActiveModal("source");
+
+  const handleSelectDeezer = () => setActiveModal("deezer");
+
+  const handleSelectFiles = () => {
+    setActiveModal(null);
+    folderInputRef.current?.click();
+  };
+
+  const handleFolderSelected = (event) => {
+    // Local file playback isn't wired up yet — this just opens the
+    // native picker for now, per the current scope.
+    console.log("Folder selected:", event.target.files);
+    event.target.value = "";
+  };
 
   const handleVolumeChange = (volume) => {
     if (audioRef.current) {
@@ -57,16 +73,25 @@ function App() {
     <div className="player">
       <FullscreenToggle />
       <audio ref={audioRef} onEnded={trackEnded} />
+      <input
+        ref={folderInputRef}
+        type="file"
+        webkitdirectory=""
+        directory=""
+        multiple
+        hidden
+        onChange={handleFolderSelected}
+      />
       <div className="player__record-column">
         <VinylRecord
           playing={status === "playing"}
           albumArt={track.coverArt}
-          onClick={openSearch}
+          onClick={openSourceMenu}
         />
       </div>
       <div className="player__control-column">
         <div className="player__display-row">
-          <NowPlayingDisplay track={track} onClick={openSearch} />
+          <NowPlayingDisplay track={track} onClick={openSourceMenu} />
           <VolumeKnob onVolumeChange={handleVolumeChange} />
         </div>
         <TransportControls
@@ -78,9 +103,16 @@ function App() {
           onSkipPrev={skipPrev}
         />
       </div>
-      {isSearchOpen && (
+      {activeModal === "source" && (
+        <SourceMenu
+          onClose={() => setActiveModal(null)}
+          onSelectDeezer={handleSelectDeezer}
+          onSelectFiles={handleSelectFiles}
+        />
+      )}
+      {activeModal === "deezer" && (
         <AlbumSearchModal
-          onClose={() => setIsSearchOpen(false)}
+          onClose={() => setActiveModal(null)}
           onAlbumSelected={handleAlbumSelected}
         />
       )}
