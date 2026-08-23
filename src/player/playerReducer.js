@@ -3,6 +3,7 @@ export function createInitialPlayerState(tracks) {
     status: "stopped",
     currentTrackIndex: 0,
     tracks,
+    albumVersion: 0,
   };
 }
 
@@ -40,6 +41,7 @@ export function playerReducer(state, action) {
         status: "stopped",
         currentTrackIndex: 0,
         tracks: action.tracks,
+        albumVersion: state.albumVersion + 1,
       };
     default:
       return state;

@@ -12,6 +12,7 @@ describe("createInitialPlayerState", () => {
     const state = createInitialPlayerState(tracks);
     expect(state.status).toBe("stopped");
     expect(state.currentTrackIndex).toBe(0);
+    expect(state.albumVersion).toBe(0);
   });
 });
 
@@ -103,5 +104,19 @@ describe("playerReducer", () => {
     expect(next.tracks).toBe(newTracks);
     expect(next.currentTrackIndex).toBe(0);
     expect(next.status).toBe("stopped");
+  });
+
+  it("LOAD_ALBUM increments albumVersion", () => {
+    const state = createInitialPlayerState(tracks);
+    const newTracks = [{ title: "New Track", album: "New Album", artist: "New Artist" }];
+    const next = playerReducer(state, { type: "LOAD_ALBUM", tracks: newTracks });
+    expect(next.albumVersion).toBe(1);
+  });
+
+  it("LOAD_ALBUM increments albumVersion again on a second load", () => {
+    const state = { ...createInitialPlayerState(tracks), albumVersion: 1 };
+    const newTracks = [{ title: "Another Track", album: "Another Album", artist: "Another Artist" }];
+    const next = playerReducer(state, { type: "LOAD_ALBUM", tracks: newTracks });
+    expect(next.albumVersion).toBe(2);
   });
 });
