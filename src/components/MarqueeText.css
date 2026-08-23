@@ -42,16 +42,6 @@
 }
 
 .marquee__track--scrolling {
-  animation: marquee-scroll 10s linear infinite;
-}
-
-@keyframes marquee-scroll {
-  0%,
-  15% {
-    transform: translateX(0);
-  }
-  95%,
-  100% {
-    transform: translateX(-50%);
-  }
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
 }

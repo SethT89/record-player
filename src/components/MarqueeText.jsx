@@ -1,4 +1,4 @@
-import { useLayoutEffect, useRef, useState } from "react";
+import { useLayoutEffect, useMemo, useRef, useState } from "react";
 import "./MarqueeText.css";
 
 /*
@@ -18,7 +18,21 @@ import "./MarqueeText.css";
   Each copy renders a dim "ghost" backdrop (an all-segments-lit stand-in,
   same length as the real text) behind the bright "lit" text, which is
   what sells the segmented-LCD look rather than just blocky glowing text.
+
+  Scroll SPEED (not duration) is held constant across every instance —
+  a fixed animation-duration would make longer titles visibly race by
+  faster than short ones, since they'd cover more pixels in the same
+  time. Instead, duration is computed per-instance from the measured
+  text width so every title moves at the same, comfortably readable
+  pace, with a fixed hold time before/after each pass regardless of
+  title length.
 */
+let nextMarqueeId = 0;
+
+const SCROLL_SPEED_PX_PER_SEC = 45;
+const HOLD_SECONDS = 1.5;
+const COPY_GAP_PX = 32; // matches .marquee__copy's padding-right
+
 function MarqueeCopy({ text, hidden }) {
   const ghost = "8".repeat(text.length);
   return (
@@ -35,6 +49,8 @@ export function MarqueeText({ text }) {
   const containerRef = useRef(null);
   const measureRef = useRef(null);
   const [isOverflowing, setIsOverflowing] = useState(false);
+  const [textWidth, setTextWidth] = useState(0);
+  const [animationName] = useState(() => `marquee-scroll-${nextMarqueeId++}`);
 
   useLayoutEffect(() => {
     const container = containerRef.current;
@@ -43,6 +59,7 @@ export function MarqueeText({ text }) {
 
     const checkOverflow = () => {
       setIsOverflowing(measure.scrollWidth > container.clientWidth);
+      setTextWidth(measure.scrollWidth);
     };
 
     checkOverflow();
@@ -52,16 +69,38 @@ export function MarqueeText({ text }) {
     return () => resizeObserver.disconnect();
   }, [text]);
 
+  const { totalDuration, holdPercent } = useMemo(() => {
+    const distance = textWidth + COPY_GAP_PX;
+    const scrollDuration = distance / SCROLL_SPEED_PX_PER_SEC;
+    const total = HOLD_SECONDS * 2 + scrollDuration;
+    return {
+      totalDuration: total,
+      holdPercent: (HOLD_SECONDS / total) * 100,
+    };
+  }, [textWidth]);
+
   return (
     <div className="marquee" ref={containerRef}>
       <span className="marquee__measure" ref={measureRef}>
         {text}
       </span>
       {isOverflowing ? (
-        <div key={text} className="marquee__track marquee__track--scrolling">
-          <MarqueeCopy text={text} />
-          <MarqueeCopy text={text} hidden />
-        </div>
+        <>
+          <style>{`
+            @keyframes ${animationName} {
+              0%, ${holdPercent.toFixed(2)}% { transform: translateX(0); }
+              ${(100 - holdPercent).toFixed(2)}%, 100% { transform: translateX(-50%); }
+            }
+          `}</style>
+          <div
+            key={text}
+            className="marquee__track marquee__track--scrolling"
+            style={{ animationName, animationDuration: `${totalDuration.toFixed(2)}s` }}
+          >
+            <MarqueeCopy text={text} />
+            <MarqueeCopy text={text} hidden />
+          </div>
+        </>
       ) : (
         <div className="marquee__track">
           <MarqueeCopy text={text} />
