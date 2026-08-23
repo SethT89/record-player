@@ -8,6 +8,7 @@ import { SourceMenu } from "./components/SourceMenu";
 import { AlbumSearchModal } from "./components/AlbumSearchModal";
 import { usePlayerState } from "./hooks/usePlayerState";
 import { mockTracks } from "./data/mockTracks";
+import { readTrackMetadata } from "./api/localMetadata";
 import "./App.css";
 
 function App() {
@@ -64,7 +65,7 @@ function App() {
     folderInputRef.current?.click();
   };
 
-  const handleFolderSelected = (event) => {
+  const handleFolderSelected = async (event) => {
     const files = [...event.target.files]
       .filter((file) => file.type.startsWith("audio/"))
       .sort((a, b) => a.webkitRelativePath.localeCompare(b.webkitRelativePath));
@@ -76,16 +77,23 @@ function App() {
     objectUrlsRef.current.forEach((url) => URL.revokeObjectURL(url));
     objectUrlsRef.current = [];
 
-    const tracks = files.map((file) => {
-      const url = URL.createObjectURL(file);
-      objectUrlsRef.current.push(url);
-      return {
-        title: file.name.replace(/\.[^/.]+$/, ""),
-        album: "My Files",
-        artist: "Unknown Artist",
-        previewUrl: url,
-      };
-    });
+    const tracks = await Promise.all(
+      files.map(async (file) => {
+        const previewUrl = URL.createObjectURL(file);
+        objectUrlsRef.current.push(previewUrl);
+
+        const meta = await readTrackMetadata(file);
+        if (meta.coverArtUrl) objectUrlsRef.current.push(meta.coverArtUrl);
+
+        return {
+          title: meta.title,
+          album: meta.album,
+          artist: meta.artist,
+          previewUrl,
+          coverArt: meta.coverArtUrl || undefined,
+        };
+      })
+    );
 
     loadAlbum(tracks);
   };
