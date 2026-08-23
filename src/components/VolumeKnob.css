@@ -7,14 +7,26 @@
   width: 44px;
   height: 44px;
   border-radius: 50%;
-  background: radial-gradient(circle at 35% 30%, #6a6d70, #2c2d2f 75%);
+  background:
+    repeating-conic-gradient(from 0deg, rgba(255, 255, 255, 0.06) 0deg 1deg, rgba(0, 0, 0, 0.04) 1deg 2deg),
+    linear-gradient(135deg, #9a9da1 0%, #6a6d71 45%, #45474b 100%);
   box-shadow:
-    0 3px 0 #141516,
-    0 5px 8px rgba(0, 0, 0, 0.5);
+    0 0 0 2px #1a1b1d,
+    0 0 0 3px #5b5e62,
+    0 4px 8px rgba(0, 0, 0, 0.5);
   border: none;
   padding: 0;
   position: relative;
   cursor: pointer;
+}
+
+.volume-knob:hover,
+.volume-knob:focus-visible {
+  box-shadow:
+    0 0 0 2px #1a1b1d,
+    0 0 0 3px #ffb347,
+    0 4px 8px rgba(0, 0, 0, 0.5),
+    0 0 8px rgba(255, 179, 71, 0.5);
 }
 
 .volume-knob:focus-visible {
@@ -29,8 +41,11 @@
   width: 3px;
   height: 14px;
   margin-left: -1.5px;
-  background: #e5e5e5;
+  background: #ffb347;
   border-radius: 2px;
+  box-shadow:
+    0 0 4px rgba(255, 179, 71, 0.85),
+    0 0 10px rgba(255, 179, 71, 0.45);
   transform-origin: 50% 18px;
 }
 
