@@ -6,9 +6,12 @@ import { TransportControls } from "./components/TransportControls";
 import { FullscreenToggle } from "./components/FullscreenToggle";
 import { SourceMenu } from "./components/SourceMenu";
 import { AlbumSearchModal } from "./components/AlbumSearchModal";
+import { SubsonicConnectModal } from "./components/SubsonicConnectModal";
+import { SubsonicBrowseModal } from "./components/SubsonicBrowseModal";
 import { usePlayerState } from "./hooks/usePlayerState";
 import { mockTracks } from "./data/mockTracks";
 import { readTrackMetadata } from "./api/localMetadata";
+import { loadConnection } from "./api/subsonicConnection";
 import "./App.css";
 
 function App() {
@@ -24,7 +27,9 @@ function App() {
     trackEnded,
     loadAlbum,
   } = usePlayerState(mockTracks);
-  const [activeModal, setActiveModal] = useState(null); // null | "source" | "deezer"
+  // null | "source" | "deezer" | "subsonic-connect" | "subsonic-browse"
+  const [activeModal, setActiveModal] = useState(null);
+  const [subsonicConnection, setSubsonicConnection] = useState(null);
   const audioRef = useRef(null);
   const folderInputRef = useRef(null);
   const objectUrlsRef = useRef([]);
@@ -60,6 +65,26 @@ function App() {
   const openSourceMenu = () => setActiveModal("source");
 
   const handleSelectDeezer = () => setActiveModal("deezer");
+
+  const handleSelectSubsonic = () => {
+    const existing = loadConnection();
+    if (existing) {
+      setSubsonicConnection(existing);
+      setActiveModal("subsonic-browse");
+    } else {
+      setActiveModal("subsonic-connect");
+    }
+  };
+
+  const handleSubsonicConnected = (connection) => {
+    setSubsonicConnection(connection);
+    setActiveModal("subsonic-browse");
+  };
+
+  const handleChangeServer = () => {
+    setSubsonicConnection(null);
+    setActiveModal("subsonic-connect");
+  };
 
   const handleSelectFiles = () => {
     setActiveModal(null);
@@ -145,12 +170,27 @@ function App() {
           onClose={() => setActiveModal(null)}
           onSelectDeezer={handleSelectDeezer}
           onSelectFiles={handleSelectFiles}
+          onSelectSubsonic={handleSelectSubsonic}
         />
       )}
       {activeModal === "deezer" && (
         <AlbumSearchModal
           onClose={() => setActiveModal(null)}
           onAlbumSelected={handleAlbumSelected}
+        />
+      )}
+      {activeModal === "subsonic-connect" && (
+        <SubsonicConnectModal
+          onClose={() => setActiveModal(null)}
+          onConnected={handleSubsonicConnected}
+        />
+      )}
+      {activeModal === "subsonic-browse" && subsonicConnection && (
+        <SubsonicBrowseModal
+          connection={subsonicConnection}
+          onClose={() => setActiveModal(null)}
+          onAlbumSelected={handleAlbumSelected}
+          onChangeServer={handleChangeServer}
         />
       )}
     </div>
