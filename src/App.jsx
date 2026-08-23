@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { VinylRecord } from "./components/VinylRecord";
+import { VinylRecordStage } from "./components/VinylRecordStage";
 import { NowPlayingDisplay } from "./components/NowPlayingDisplay";
 import { VolumeKnob } from "./components/VolumeKnob";
 import { TransportControls } from "./components/TransportControls";
@@ -15,6 +15,7 @@ function App() {
   const {
     status,
     track,
+    albumVersion,
     play,
     pause,
     stop,
@@ -118,10 +119,11 @@ function App() {
         onChange={handleFolderSelected}
       />
       <div className="player__record-column">
-        <VinylRecord
+        <VinylRecordStage
           playing={status === "playing"}
           albumArt={track.coverArt}
           onClick={openSourceMenu}
+          albumVersion={albumVersion}
         />
       </div>
       <div className="player__control-column">
