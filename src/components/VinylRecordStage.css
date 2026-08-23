@@ -2,7 +2,6 @@
   position: relative;
   width: var(--vinyl-record-size);
   height: var(--vinyl-record-size);
-  overflow: hidden;
 }
 
 .vinyl-record-stage__record {
@@ -16,8 +15,8 @@
 
 .vinyl-record-stage__record--incoming,
 .vinyl-record-stage__record--outgoing {
-  animation-duration: 700ms;
-  animation-timing-function: ease-in-out;
+  animation-duration: 1800ms;
+  animation-timing-function: cubic-bezier(0.65, 0, 0.35, 1);
   animation-fill-mode: forwards;
 }
 
@@ -41,9 +40,18 @@
   }
 }
 
+/*
+  The -100%/100% base offset covers the record's own diameter; the added
+  --vinyl-swap-gap-* term (set inline by VinylRecordStage, measured fresh
+  per transition) stretches that so the record actually travels past the
+  real edge of the browser instead of just clearing its own stage box —
+  and because the incoming and outgoing records move by the same total
+  distance in the same direction, that same gap is what separates them
+  from each other throughout the crossing.
+*/
 @keyframes vinyl-slide-in-top {
   from {
-    transform: translateY(-100%);
+    transform: translateY(calc(-100% - var(--vinyl-swap-gap-y, 0px)));
   }
   to {
     transform: translateY(0);
@@ -55,13 +63,13 @@
     transform: translateY(0);
   }
   to {
-    transform: translateY(100%);
+    transform: translateY(calc(100% + var(--vinyl-swap-gap-y, 0px)));
   }
 }
 
 @keyframes vinyl-slide-in-right {
   from {
-    transform: translateX(100%);
+    transform: translateX(calc(100% + var(--vinyl-swap-gap-x, 0px)));
   }
   to {
     transform: translateX(0);
@@ -73,6 +81,6 @@
     transform: translateX(0);
   }
   to {
-    transform: translateX(-100%);
+    transform: translateX(calc(-100% - var(--vinyl-swap-gap-x, 0px)));
   }
 }

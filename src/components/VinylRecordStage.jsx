@@ -15,11 +15,23 @@ function prefersReducedMotion() {
   VinylRecordStage.css). Plain track changes within the same album don't
   touch albumVersion, so they never trigger this.
 
+  The travel distance isn't just the record's own diameter — it's stretched
+  by the record's actual current gap to the relevant viewport edge (top on
+  desktop, right on mobile), measured fresh each time a transition starts.
+  Since the player layout keeps the record centered, that same gap exists
+  on the opposite edge too, so adding it to both the incoming record's
+  start offset and the outgoing record's end offset makes the record
+  genuinely enter/exit past the real edge of the browser, with the two
+  records maintaining that gap between them the whole way across — rather
+  than the two being flush against each other like a filmstrip.
+
   Props: everything VinylRecord takes (playing, albumArt, onClick) plus
     - albumVersion: number — bumped by the player reducer on LOAD_ALBUM.
 */
 export function VinylRecordStage({ playing, albumArt, onClick, albumVersion }) {
   const [outgoingCoverArt, setOutgoingCoverArt] = useState(null);
+  const [swapGap, setSwapGap] = useState({ x: 0, y: 0 });
+  const stageRef = useRef(null);
   const lastAlbumArtRef = useRef(albumArt);
   const lastAlbumVersionRef = useRef(albumVersion);
 
@@ -27,6 +39,11 @@ export function VinylRecordStage({ playing, albumArt, onClick, albumVersion }) {
     if (albumVersion !== lastAlbumVersionRef.current) {
       lastAlbumVersionRef.current = albumVersion;
       if (!prefersReducedMotion()) {
+        const rect = stageRef.current.getBoundingClientRect();
+        setSwapGap({
+          y: Math.max(0, rect.top),
+          x: Math.max(0, window.innerWidth - rect.right),
+        });
         setOutgoingCoverArt(lastAlbumArtRef.current);
       }
     }
@@ -36,7 +53,14 @@ export function VinylRecordStage({ playing, albumArt, onClick, albumVersion }) {
   const isTransitioning = outgoingCoverArt !== null;
 
   return (
-    <div className="vinyl-record-stage">
+    <div
+      ref={stageRef}
+      className="vinyl-record-stage"
+      style={{
+        "--vinyl-swap-gap-x": `${swapGap.x}px`,
+        "--vinyl-swap-gap-y": `${swapGap.y}px`,
+      }}
+    >
       {isTransitioning && (
         // Keying by albumVersion forces a fresh DOM node (and therefore a
         // fresh animation start) if a new album interrupts a transition
