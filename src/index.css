@@ -5,6 +5,18 @@
 
 html {
   overscroll-behavior-y: none;
+  /*
+    Without this, iOS Safari's automatic text-size-adjust legibility
+    heuristic can boost the rendered size of some text elements and not
+    others, independent of their declared font-size — its column-width
+    estimate disagrees from element to element, especially for unusual
+    layouts like the marquee's flex + absolutely-positioned overlay text.
+    That reads as "the font size changes between songs" even though every
+    font-size in this app is a fixed, never-computed pixel value. This
+    isn't a factor on desktop browsers, which don't apply the same boost.
+  */
+  text-size-adjust: 100%;
+  -webkit-text-size-adjust: 100%;
 }
 
 body {
