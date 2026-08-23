@@ -44,4 +44,14 @@
 .marquee__track--scrolling {
   animation-timing-function: linear;
   animation-iteration-count: infinite;
+  /*
+    Without this, the previously off-screen "hidden" duplicate copy only
+    gets promoted to its own GPU-composited layer the instant it becomes
+    the visible one (right when the loop's transform jump lands it at the
+    start) — a known Safari/WebKit quirk where that on-demand promotion
+    itself can cause a visible flash. Hinting the browser to promote the
+    layer ahead of time, before it's ever needed, avoids the on-demand
+    promotion (and the flash) entirely.
+  */
+  will-change: transform;
 }
