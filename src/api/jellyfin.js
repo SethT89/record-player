@@ -97,8 +97,11 @@ export async function authenticate(serverUrl, username, password, deviceId) {
     },
     body: JSON.stringify({ Username: username, Pw: password }),
   });
-  if (!response.ok) {
+  if (response.status === 401) {
     throw new Error("Wrong username or password.");
+  }
+  if (!response.ok) {
+    throw new Error("Couldn't find a Jellyfin server at that address.");
   }
   const body = await response.json();
   return { userId: body.User.Id, accessToken: body.AccessToken };
