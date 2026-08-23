@@ -18,14 +18,26 @@
   width: max-content;
 }
 
+/*
+  marquee__measure needs the exact same font metrics as marquee__copy to
+  produce an accurate overflow measurement — it's a sibling, not an
+  ancestor, of marquee__copy, so none of this inherits automatically.
+  Measuring in the wrong font previously under-measured every title,
+  causing some that actually overflow to be treated as fitting and
+  silently clipped instead of scrolling.
+*/
+.marquee__measure,
+.marquee__copy {
+  font-family: var(--display-font);
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+
 .marquee__copy {
   position: relative;
   display: inline-block;
   white-space: nowrap;
   padding-right: 32px;
-  font-family: var(--display-font);
-  letter-spacing: 1px;
-  text-transform: uppercase;
 }
 
 .marquee__ghost {

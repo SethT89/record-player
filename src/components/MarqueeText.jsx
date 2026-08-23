@@ -40,8 +40,12 @@ const SCROLL_SPEED_PX_PER_SEC = 45;
 const HOLD_SECONDS = 1.5;
 const COPY_GAP_PX = 32; // matches .marquee__copy's padding-right
 
+function ghostFor(text) {
+  return "8".repeat(text.length);
+}
+
 function MarqueeCopy({ text, hidden }) {
-  const ghost = "8".repeat(text.length);
+  const ghost = ghostFor(text);
   return (
     <span className="marquee__copy" aria-hidden={hidden || undefined}>
       <span className="marquee__ghost" aria-hidden="true">
@@ -92,8 +96,16 @@ export function MarqueeText({ text }) {
     <div className="marquee" ref={containerRef}>
       {fontReady && (
         <>
+          {/*
+            Measures the ghost-substituted string, not the raw text — the
+            visible box is sized by the ghost span (see MarqueeCopy), and
+            in this font a space or punctuation character is narrower than
+            "8", so measuring the raw text under-measures whenever it
+            contains either, same class of bug as measuring in the wrong
+            font entirely.
+          */}
           <span className="marquee__measure" ref={measureRef}>
-            {text}
+            {ghostFor(text)}
           </span>
           {isOverflowing ? (
             <>
