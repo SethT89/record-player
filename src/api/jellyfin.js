@@ -82,21 +82,48 @@ export function parseAlbumTracksResponse(body, connection) {
   ------------
   Logs in via POST /Users/AuthenticateByName. Doesn't go through
   buildApiUrl/jellyfinFetch since there's no token yet to attach — this is
-  the one call that produces the token instead of consuming it. Throws on
-  any non-2xx response (401 for wrong credentials, etc.); callers
-  distinguish that from a network-level failure the same way
-  SubsonicConnectModal already does.
+  the one call that produces the token instead of consuming it.
+
+  Jellyfin's 401 responses carry no CORS headers (unlike its 200s and its
+  OPTIONS preflight — verified against a live server), so a wrong password
+  makes fetch() throw a network-level TypeError with no readable status,
+  indistinguishable from the server being unreachable entirely. To recover
+  a real "wrong username or password" message, this first pings
+  /System/Info/Public — an unauthenticated endpoint that reliably does
+  carry CORS headers — to confirm the URL really does point at a reachable
+  Jellyfin server *before* attempting login. If that pre-check succeeds
+  and the login call then fails at the network level, the failure can only
+  be the credentials; if the pre-check itself fails, this is a genuine
+  unreachable/CORS-disabled server and that ambiguity is preserved.
 */
 export async function authenticate(serverUrl, username, password, deviceId) {
   const base = serverUrl.replace(/\/+$/, "");
-  const response = await fetch(`${base}/Users/AuthenticateByName`, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      "X-Emby-Authorization": `MediaBrowser Client="${CLIENT_NAME}", Device="Browser", DeviceId="${deviceId}", Version="${CLIENT_VERSION}"`,
-    },
-    body: JSON.stringify({ Username: username, Pw: password }),
-  });
+
+  let serverConfirmed = false;
+  try {
+    const pingResponse = await fetch(`${base}/System/Info/Public`);
+    serverConfirmed = pingResponse.ok;
+  } catch {
+    serverConfirmed = false;
+  }
+
+  let response;
+  try {
+    response = await fetch(`${base}/Users/AuthenticateByName`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "X-Emby-Authorization": `MediaBrowser Client="${CLIENT_NAME}", Device="Browser", DeviceId="${deviceId}", Version="${CLIENT_VERSION}"`,
+      },
+      body: JSON.stringify({ Username: username, Pw: password }),
+    });
+  } catch (error) {
+    if (serverConfirmed) {
+      throw new Error("Wrong username or password.");
+    }
+    throw error;
+  }
+
   if (response.status === 401) {
     throw new Error("Wrong username or password.");
   }

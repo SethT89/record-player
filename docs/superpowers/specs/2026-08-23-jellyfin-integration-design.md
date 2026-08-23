@@ -177,27 +177,29 @@ Subsonic:
 3. **Unreachable/invalid URL** (non-JSON response, DNS failure) —
    "Couldn't find a Jellyfin server at that address."
 
-## Known limitation (verified 2026-08-23)
+## CORS quirk on auth failures, and how it's handled
 
 On `demo.jellyfin.org`, a failed login (`AuthenticateByName` returning
 401) carries **no CORS headers at all** on that response — only
-successful (200) responses and the `OPTIONS` preflight do. Since the
-browser's CORS model hides the body *and status code* of a
-cross-origin response with no `access-control-allow-origin` header, a
-wrong-password attempt is indistinguishable, from the client's
-perspective, from the server being unreachable or CORS-disabled
-entirely: `fetch()` throws a plain `TypeError`, not something carrying a
-401. In practice this means `JellyfinConnectModal`'s network/CORS message
-("Couldn't reach that server...") is what a user sees for a wrong
-password too, not "Wrong username or password" — `authenticate()`'s
-`response.status === 401` branch is correct code and will fire whenever
-the browser *can* see the response, but there's no client-side workaround
-for a server that strips CORS headers specifically on its error
-responses (a known ASP.NET Core CORS-middleware-ordering gotcha, not
-necessarily unique to the public demo server). Fixing this for real would
-require a backend relay, which is out of scope per this spec's no-backend
-constraint. Documented here rather than silently accepted, per the same
-"verify, don't assume" discipline used for the CORS check itself.
+successful (200) responses and the `OPTIONS` preflight do (a known
+ASP.NET Core CORS-middleware-ordering gotcha, not necessarily unique to
+the public demo server). Since the browser's CORS model hides the body
+*and status code* of a cross-origin response with no
+`access-control-allow-origin` header, a wrong-password attempt is, on its
+own, indistinguishable from the server being unreachable entirely:
+`fetch()` throws a plain `TypeError` either way.
+
+`authenticate()` works around this rather than exposing it to the user:
+before attempting login, it pings `/System/Info/Public` — an
+unauthenticated endpoint confirmed to reliably carry CORS headers on both
+success and failure. If that ping succeeds (confirming the URL really
+does point at a reachable Jellyfin server) and the login call then fails
+at the network level, the failure can only be the credentials, so it's
+safely reported as "Wrong username or password." If the ping itself
+fails, the server is genuinely unreachable/CORS-disabled and the
+network/CORS message is shown instead. Verified live against
+`demo.jellyfin.org` for all three outcomes (wrong password, unreachable
+server, non-Jellyfin server) after implementation.
 
 ## Explicitly out of scope
 
