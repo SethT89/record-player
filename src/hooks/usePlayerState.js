@@ -14,6 +14,7 @@ export function usePlayerState(tracks) {
   return {
     status: state.status,
     track: state.tracks[state.currentTrackIndex],
+    albumVersion: state.albumVersion,
     play: () => dispatch({ type: "PLAY" }),
     pause: () => dispatch({ type: "PAUSE" }),
     stop: () => dispatch({ type: "STOP" }),
