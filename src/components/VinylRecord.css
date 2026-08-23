@@ -1,6 +1,6 @@
 .vinyl-record {
-  width: clamp(280px, min(60vw, 60vh), 680px);
-  height: clamp(280px, min(60vw, 60vh), 680px);
+  width: clamp(280px, min(80vw, 80vh), 1000px);
+  height: clamp(280px, min(80vw, 80vh), 1000px);
   border-radius: 50%;
   position: relative;
   box-sizing: border-box;
