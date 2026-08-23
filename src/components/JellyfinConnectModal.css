@@ -1,0 +1,81 @@
+.jellyfin-connect-scrim {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.65);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 100;
+  padding: 24px;
+  box-sizing: border-box;
+}
+
+.jellyfin-connect-modal {
+  width: 100%;
+  max-width: 360px;
+  display: flex;
+  flex-direction: column;
+  background: #1c1d1f;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 12px;
+  padding: 20px;
+  box-sizing: border-box;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+}
+
+.jellyfin-connect-form {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.jellyfin-connect-label {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  color: #9a9a9a;
+  font-size: 13px;
+}
+
+.jellyfin-connect-input {
+  background: #101112;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 6px;
+  padding: 12px 14px;
+  color: #e5e5e5;
+  font-size: 16px;
+}
+
+.jellyfin-connect-input:focus-visible {
+  outline: 2px solid #e5e5e5;
+  outline-offset: 1px;
+}
+
+.jellyfin-connect-submit {
+  background: rgba(255, 255, 255, 0.08);
+  border: none;
+  border-radius: 6px;
+  padding: 12px 18px;
+  color: #e5e5e5;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.jellyfin-connect-submit:hover {
+  background: rgba(255, 255, 255, 0.14);
+}
+
+.jellyfin-connect-submit:disabled {
+  opacity: 0.6;
+  cursor: default;
+}
+
+.jellyfin-connect-status {
+  margin: 12px 0 0;
+  font-size: 13px;
+  color: #9a9a9a;
+}
+
+.jellyfin-connect-status--error {
+  color: #e28a8a;
+}
